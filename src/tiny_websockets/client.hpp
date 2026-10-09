@@ -91,6 +91,10 @@ namespace websockets {
     void setCACertBundle(const uint8_t* bundle, size_t size);
     void setCertificate(const char* client_ca);
     void setPrivateKey(const char* private_key);
+    // Called on EVERY wss connect to create the secured socket (upgradeToSecuredConnection() builds a
+    // fresh one each time and drops whatever the constructor was given). Lets the application return
+    // a subclass, e.g. one with a different read() or handshake timeout. Default: a plain one.
+    void setSecuredClientFactory(std::function<WSDefaultSecuredTcpClient*()> factory);
   #endif
 
     virtual ~WebsocketsClient();
@@ -119,6 +123,7 @@ namespace websockets {
   #elif defined(ESP32)
     const char* _optional_ssl_ca_cert = nullptr;
     const uint8_t* _optional_ssl_ca_bundle = nullptr;
+    std::function<WSDefaultSecuredTcpClient*()> _secured_client_factory;
     size_t _optional_ssl_ca_bundle_size = 0;
     const char* _optional_ssl_client_ca = nullptr;
     const char* _optional_ssl_private_key = nullptr;

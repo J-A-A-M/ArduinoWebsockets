@@ -193,7 +193,12 @@ namespace websockets {
 
     void WebsocketsClient::upgradeToSecuredConnection() {
     #ifndef _WS_CONFIG_NO_SSL
+    #ifdef ESP32
+        WSDefaultSecuredTcpClient* client =
+            this->_secured_client_factory ? this->_secured_client_factory() : new WSDefaultSecuredTcpClient;
+    #else
         auto client = new WSDefaultSecuredTcpClient;
+    #endif
 
     #ifdef ESP8266
         if(
@@ -633,6 +638,10 @@ namespace websockets {
     void WebsocketsClient::setCACertBundle(const uint8_t* bundle, size_t size) {
         this->_optional_ssl_ca_bundle = bundle;
         this->_optional_ssl_ca_bundle_size = size;
+    }
+
+    void WebsocketsClient::setSecuredClientFactory(std::function<WSDefaultSecuredTcpClient*()> factory) {
+        this->_secured_client_factory = std::move(factory);
     }
 
     void WebsocketsClient::setCertificate(const char* client_ca) {
