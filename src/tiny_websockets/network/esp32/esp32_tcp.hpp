@@ -20,6 +20,10 @@ namespace websockets { namespace network {
       this->client.setCACert(ca_cert);
     }
 
+    void setCACertBundle(const uint8_t* bundle, size_t size) {
+      this->client.setCACertBundle(bundle, size);
+    }
+
     void setCertificate(const char* client_ca) {
       this->client.setCertificate(client_ca);
     }

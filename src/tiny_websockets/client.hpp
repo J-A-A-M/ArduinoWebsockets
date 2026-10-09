@@ -86,6 +86,9 @@ namespace websockets {
 	void setKnownKey(const PublicKey *pk);
   #elif defined(ESP32)
     void setCACert(const char* ca_cert);
+    // Verifies against a prebuilt x509 certificate bundle (e.g. arduino-esp32's rootca_crt_bundle_start)
+    // instead of one pinned CA, so a CA rotation does not strand deployed devices.
+    void setCACertBundle(const uint8_t* bundle, size_t size);
     void setCertificate(const char* client_ca);
     void setPrivateKey(const char* private_key);
   #endif
@@ -115,6 +118,8 @@ namespace websockets {
     const PrivateKey* _optional_ssl_ec_private_key = nullptr;
   #elif defined(ESP32)
     const char* _optional_ssl_ca_cert = nullptr;
+    const uint8_t* _optional_ssl_ca_bundle = nullptr;
+    size_t _optional_ssl_ca_bundle_size = 0;
     const char* _optional_ssl_client_ca = nullptr;
     const char* _optional_ssl_private_key = nullptr;
   #endif

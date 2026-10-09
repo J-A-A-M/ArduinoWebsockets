@@ -225,6 +225,9 @@ namespace websockets {
         if(this->_optional_ssl_ca_cert) {
             client->setCACert(this->_optional_ssl_ca_cert);
         }
+        if(this->_optional_ssl_ca_bundle) {
+            client->setCACertBundle(this->_optional_ssl_ca_bundle, this->_optional_ssl_ca_bundle_size);
+        }
         if(this->_optional_ssl_client_ca) {
             client->setCertificate(this->_optional_ssl_client_ca);
         }
@@ -627,6 +630,11 @@ namespace websockets {
         this->_optional_ssl_ca_cert = ca_cert;
     }
 
+    void WebsocketsClient::setCACertBundle(const uint8_t* bundle, size_t size) {
+        this->_optional_ssl_ca_bundle = bundle;
+        this->_optional_ssl_ca_bundle_size = size;
+    }
+
     void WebsocketsClient::setCertificate(const char* client_ca) {
         this->_optional_ssl_client_ca = client_ca;
     }
@@ -637,6 +645,8 @@ namespace websockets {
 
     void WebsocketsClient::setInsecure() {
         this->_optional_ssl_ca_cert = nullptr;
+        this->_optional_ssl_ca_bundle = nullptr;
+        this->_optional_ssl_ca_bundle_size = 0;
         this->_optional_ssl_client_ca = nullptr;
         this->_optional_ssl_private_key = nullptr;
     }
