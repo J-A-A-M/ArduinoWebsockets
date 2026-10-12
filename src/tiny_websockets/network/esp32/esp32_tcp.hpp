@@ -51,7 +51,11 @@ namespace websockets { namespace network {
     
     TcpClient* accept() override {
       while(available()) {
+#if defined(ESP_ARDUINO_VERSION_MAJOR) && ESP_ARDUINO_VERSION_MAJOR >= 3
+        auto client = server.accept(); // available() was renamed in arduino-esp32 3.x and is deprecated
+#else
         auto client = server.available();
+#endif
         if(client) {
           return new Esp32TcpClient{client};
         }
